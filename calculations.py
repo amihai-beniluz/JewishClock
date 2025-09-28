@@ -8,7 +8,6 @@ from datetime import datetime, timedelta
 from pytz import timezone
 from pyluach import dates
 
-
 # ייבוא קבועים
 from constants import (
     PLANETS, H_NAMES, H_NAMES_CLEANED, NIKUDIM, GIMATRIA, HEBREW_MONTHS, HEBREW_GIMATRIA_MAP,
@@ -93,8 +92,6 @@ def molad_calculation_function(hebrew_date, location_info):
         rosh_chodesh_weekday = 1
     else:
         rosh_chodesh_weekday += 2
-
-    final_molad_date = None
 
     # Step 3: Adjust the date if the weekday is the same
     if rosh_chodesh_weekday == molad_day_of_week:
@@ -226,7 +223,7 @@ def get_adnut_combinations(temporary_hour):
     if 0 <= adnut_index_2 < len(A_NAMES):
         return A_NAMES[adnut_index_1], A_NAMES[adnut_index_2]
     else:
-        #TODO: בשביל החודשים - לברר באדר ב מה הצירופים - האם כמו בהויות שזה כולם
+        # TODO: בשביל החודשים - לברר באדר ב מה הצירופים - האם כמו בהויות שזה כולם
         return "שגיאה", "שגיאה"
 
 
@@ -318,11 +315,9 @@ def get_et_and_camp_of_the_day(hebrew_day):
 
 
 def calculate_temporary_time(now=None):
+    loc = LocationInfo("my home", "Israel", "Asia/Jerusalem", 31.696520, 35.121194)
     if now is None:
-        loc = LocationInfo("my home", "Israel", "Asia/Jerusalem", 31.696520, 35.121194)
         now = datetime.now(timezone(loc.timezone))
-    else:
-        loc = LocationInfo("my home", "Israel", "Asia/Jerusalem", 31.696520, 35.121194)
 
     is_day = False
     total_parts = 0
@@ -362,7 +357,7 @@ def calculate_temporary_time(now=None):
         n_s = sun(loc.observer, date=today + timedelta(days=1), tzinfo=timezone(loc.timezone))
         n_sunrise = n_s['sunrise']
 
-        if now >= sunrise and now <= sunset:
+        if sunrise <= now <= sunset:
             is_day = True
             shift_for_pyluach = 0
             hebrew_day_of_week_index = (weekday_index + 1) % 7
@@ -425,7 +420,7 @@ def calculate_temporary_time(now=None):
             if start_of_cycle > now:
                 start_of_cycle -= timedelta(days=7)
 
-            sefirah_hayom = SEFIROT_DAY[(hebrew_day_of_week_index) % 7]
+            sefirah_hayom = SEFIROT_DAY[hebrew_day_of_week_index % 7]
 
             # Use the correct index for the Hebrew day
             current_hebrew_weekday_name = HEBREW_WEEKDAYS.get(hebrew_day_of_week_index, "שגיאה")

@@ -3,13 +3,14 @@
 import tkinter as tk
 import pytz
 from tkinter import font
-from tkinter import simpledialog, messagebox
-from datetime import datetime, timedelta
-import sys
+from tkinter import messagebox
+from datetime import datetime
+
+from constants import TURQUOISE, ECRU, GRAY, YELLOW, BLACK
 
 # ייבוא פונקציות החישוב
 from calculations import calculate_temporary_time, get_tatraf_combination, get_week_of_month, SEFIROT_MONTH, \
-     get_adnut_combinations, get_moon_course_data
+    get_adnut_combinations
 
 # --- GUI Setup ---
 root = tk.Tk()
@@ -45,6 +46,7 @@ main_parzuf_label = None
 main_sefirah_hayom_label = None
 main_et_of_the_day_label = None
 main_camp_of_the_day_label = None
+main_moon_course_label = None
 main_adnut_hour_combination_label_1 = None
 main_adnut_hour_combination_label_2 = None
 main_adnut_month_combination_label_1 = None
@@ -192,7 +194,8 @@ def create_full_ui(parent_frame, is_specific=False):
     center_top_frame.grid(row=1, column=1, sticky="n", padx=10, pady=(70, 10))
     main_temporary_time_label = tk.Label(center_top_frame, text="--:----", font=custom_font, fg="#ecf0f1", bg="#2c3e50")
     main_temporary_time_label.pack(side="top", pady=(2, 4))
-    main_tatraf_label = tk.Label(center_top_frame, text="יחוד תתר\"ף: ?", font=prominent_font, fg="#f1c40f", bg="#2c3e50")
+    main_tatraf_label = tk.Label(center_top_frame, text="יחוד תתר\"ף: ?", font=prominent_font, fg="#f1c40f",
+                                 bg="#2c3e50")
     main_tatraf_label.pack(side="top", pady=(4, 6))
     main_local_time_label = tk.Label(center_top_frame, text="", font=small_font, fg="#bdc3c7", bg="#2c3e50")
     main_local_time_label.pack(side="top", pady=(2, 2))
@@ -208,14 +211,19 @@ def create_full_ui(parent_frame, is_specific=False):
     # --- הוספת התוכן המלא לכל המסגרות ---
 
     # תוכן year_sefi_frame
-    tk.Label(year_sefi_frame, text="פרטי השנה", font=("Arial", 22, "bold"), fg="#ecf0f1", bg="#2c3e50").pack(pady=(0, 2))
-    main_sefirah_elef_label = tk.Label(year_sefi_frame, text="ספירת האלף: ?", font=info_font, fg="#ecf0f1", bg="#2c3e50")
+    tk.Label(year_sefi_frame, text="פרטי השנה", font=("Arial", 22, "bold"), fg="#ecf0f1", bg="#2c3e50").pack(
+        pady=(0, 2))
+    main_sefirah_elef_label = tk.Label(year_sefi_frame, text="ספירת האלף: ?", font=info_font, fg="#ecf0f1",
+                                       bg="#2c3e50")
     main_sefirah_elef_label.pack(pady=1)
-    main_sefirah_meah_label = tk.Label(year_sefi_frame, text="ספירת המאה: ?", font=info_font, fg="#ecf0f1", bg="#2c3e50")
+    main_sefirah_meah_label = tk.Label(year_sefi_frame, text="ספירת המאה: ?", font=info_font, fg="#ecf0f1",
+                                       bg="#2c3e50")
     main_sefirah_meah_label.pack(pady=1)
-    main_sefirah_asor_label = tk.Label(year_sefi_frame, text="ספירת העשור: ?", font=info_font, fg="#ecf0f1", bg="#2c3e50")
+    main_sefirah_asor_label = tk.Label(year_sefi_frame, text="ספירת העשור: ?", font=info_font, fg="#ecf0f1",
+                                       bg="#2c3e50")
     main_sefirah_asor_label.pack(pady=1)
-    main_sefirah_shanah_label = tk.Label(year_sefi_frame, text="ספירת השנה: ?", font=info_font, fg="#ecf0f1", bg="#2c3e50")
+    main_sefirah_shanah_label = tk.Label(year_sefi_frame, text="ספירת השנה: ?", font=info_font, fg="#ecf0f1",
+                                         bg="#2c3e50")
     main_sefirah_shanah_label.pack(pady=1)
 
     # תוכן month_frame
@@ -234,12 +242,12 @@ def create_full_ui(parent_frame, is_specific=False):
     tk.Label(adnut_month_combination_frame, text=":צירופי אדנות", font=combination_font, fg="#ecf0f1",
              bg="#2c3e50").pack(side="right", padx=(0, 5))
     main_adnut_month_combination_label_1 = tk.Label(adnut_month_combination_frame, text="?", font=combination_font,
-                                              fg="#ecf0f1",
-                                              bg="#2c3e50")
+                                                    fg="#ecf0f1",
+                                                    bg="#2c3e50")
     main_adnut_month_combination_label_1.pack(side="left", padx=1)
     main_adnut_month_combination_label_2 = tk.Label(adnut_month_combination_frame, text="?", font=combination_font,
-                                              fg="#ecf0f1",
-                                              bg="#2c3e50")
+                                                    fg="#ecf0f1",
+                                                    bg="#2c3e50")
     main_adnut_month_combination_label_2.pack(side="left", padx=1)
     main_zodiac_label = tk.Label(month_frame, text="מזל  ?", font=info_font, fg="#ecf0f1", bg="#2c3e50")
     main_zodiac_label.pack(pady=1)
@@ -261,13 +269,16 @@ def create_full_ui(parent_frame, is_specific=False):
         pady=(0, 2))
     main_parzuf_label = tk.Label(day_week_frame, text="פרצוף השבוע: ?", font=("Arial", 14), fg="#ecf0f1", bg="#2c3e50")
     main_parzuf_label.pack(pady=2)
-    main_moon_course_label = tk.Label(day_week_frame, text="מהלך הלבנה: ?", font=("Arial", 14), fg="#ecf0f1", bg="#2c3e50")
+    main_moon_course_label = tk.Label(day_week_frame, text="מהלך הלבנה: ?", font=("Arial", 14), fg="#ecf0f1",
+                                      bg="#2c3e50")
     main_moon_course_label.pack(pady=2)
     main_et_of_the_day_label = tk.Label(day_week_frame, text="עת: ?", font=("Arial", 14), fg="#ecf0f1", bg="#2c3e50")
     main_et_of_the_day_label.pack(pady=2)
-    main_camp_of_the_day_label = tk.Label(day_week_frame, text="מחנה השכינה: ?", font=("Arial", 14), fg="#ecf0f1", bg="#2c3e50")
+    main_camp_of_the_day_label = tk.Label(day_week_frame, text="מחנה השכינה: ?", font=("Arial", 14), fg="#ecf0f1",
+                                          bg="#2c3e50")
     main_camp_of_the_day_label.pack(pady=2)
-    main_sefirah_hayom_label = tk.Label(day_week_frame, text="ספירת היום: ?", font=("Arial", 14), fg="#ecf0f1", bg="#2c3e50")
+    main_sefirah_hayom_label = tk.Label(day_week_frame, text="ספירת היום: ?", font=("Arial", 14), fg="#ecf0f1",
+                                        bg="#2c3e50")
     main_sefirah_hayom_label.pack(pady=2)
 
     # תוכן hour_frame
@@ -283,10 +294,12 @@ def create_full_ui(parent_frame, is_specific=False):
         main_holy_combination_labels.append(label)
     adnut_hour_combination_frame = tk.Frame(hour_frame, bg="#2c3e50")
     adnut_hour_combination_frame.pack(pady=5)
-    tk.Label(adnut_hour_combination_frame, text=":צירופי אדנות", font=combination_font, fg="#ecf0f1", bg="#2c3e50").pack(
+    tk.Label(adnut_hour_combination_frame, text=":צירופי אדנות", font=combination_font, fg="#ecf0f1",
+             bg="#2c3e50").pack(
         side="right", padx=(0, 5))
-    main_adnut_hour_combination_label_1 = tk.Label(adnut_hour_combination_frame, text="?", font=combination_font, fg="#ecf0f1",
-                                         bg="#2c3e50")
+    main_adnut_hour_combination_label_1 = tk.Label(adnut_hour_combination_frame, text="?", font=combination_font,
+                                                   fg="#ecf0f1",
+                                                   bg="#2c3e50")
     main_adnut_hour_combination_label_1.pack(side="left", padx=1)
     main_adnut_hour_combination_label_2 = tk.Label(adnut_hour_combination_frame, text="?", font=combination_font,
                                                    fg="#ecf0f1", bg="#2c3e50")
@@ -304,8 +317,9 @@ def create_full_ui(parent_frame, is_specific=False):
     main_ability_label = tk.Label(hour_frame, text="פעולה: ?", font=("Arial", 14), fg="#ecf0f1", bg="#2c3e50")
     main_ability_label.pack(pady=1)
     main_diagonal_boundary_label = tk.Label(hour_frame, text="גבול אלכסון: ?", font=("Arial", 14), fg="#ecf0f1",
-                                       bg="#2c3e50")
+                                            bg="#2c3e50")
     main_diagonal_boundary_label.pack(pady=1)
+
 
 def update_main_ui():
     """מעדכן את כל הנתונים על המסך הראשי."""
@@ -503,13 +517,6 @@ def show_specific_date_window(now):
 
 def create_full_ui_for_specific(parent_frame, labels_dict):
     """יוצר את ממשק המשתמש המלא עבור החלון הספציפי ומאחסן את הרכיבים במילון."""
-    TURQUOISE = "#1abc9c"
-    ECRU = "#ecf0f1"
-    GRAY = "#bdc3c7"
-    GREEN = "#2ecc71"
-    YELLOW = "#f1c40f"
-    BLACK = "#000000"
-
     parent_frame.grid_columnconfigure(0, weight=1)
     parent_frame.grid_columnconfigure(1, weight=0, minsize=520)
     parent_frame.grid_columnconfigure(2, weight=1)
@@ -612,12 +619,13 @@ def create_full_ui_for_specific(parent_frame, labels_dict):
         pady=(0, 2))
     labels_dict["parzuf"] = tk.Label(day_week_frame, text="פרצוף השבוע: ?", font=("Arial", 14), fg=ECRU, bg=TURQUOISE)
     labels_dict["parzuf"].pack(pady=2)
-    labels_dict["moon_course"] = tk.Label(day_week_frame, text="מהלך הלבנה: ?", font=("Arial", 14), fg=ECRU, bg=TURQUOISE)
+    labels_dict["moon_course"] = tk.Label(day_week_frame, text="מהלך הלבנה: ?", font=("Arial", 14), fg=ECRU,
+                                          bg=TURQUOISE)
     labels_dict["moon_course"].pack(pady=2)
-    labels_dict["et_of_the_day"] = tk.Label(day_week_frame, text="עת: ?",  font=("Arial", 14), fg=ECRU, bg=TURQUOISE)
+    labels_dict["et_of_the_day"] = tk.Label(day_week_frame, text="עת: ?", font=("Arial", 14), fg=ECRU, bg=TURQUOISE)
     labels_dict["et_of_the_day"].pack(pady=2)
     labels_dict["camp_of_the_day"] = tk.Label(day_week_frame, text="שם מחנה השכינה: ?", font=("Arial", 14), fg=ECRU,
-                                            bg=TURQUOISE)
+                                              bg=TURQUOISE)
     labels_dict["camp_of_the_day"].pack(pady=2)
     labels_dict["sefirah_hayom"] = tk.Label(day_week_frame, text="ספירת היום: ?", font=("Arial", 14), fg=ECRU,
                                             bg=TURQUOISE)
@@ -663,6 +671,7 @@ def create_full_ui_for_specific(parent_frame, labels_dict):
     labels_dict["diagonal_boundary"] = tk.Label(hour_frame, text="גבול אלכסון: ?", font=("Arial", 14), fg=ECRU,
                                                 bg=TURQUOISE)
     labels_dict["diagonal_boundary"].pack(pady=1)
+
 
 def update_specific_ui(labels, now):
     """מעדכן את כל הנתונים על המסך של החלון הספציפי."""
@@ -756,7 +765,7 @@ create_small_ui(main_frame)
 
 # יצירת מסגרת תחתונה חדשה לכפתור
 bottom_frame = tk.Frame(root, bg="#2c3e50")
-bottom_frame.pack(side="bottom", pady=20) # מיקום בתחתית המסך
+bottom_frame.pack(side="bottom", pady=20)  # מיקום בתחתית המסך
 
 # יצירת הכפתור והצגתו במסגרת החדשה
 specific_date_button = tk.Button(bottom_frame, text="הזן תאריך מסוים", command=show_specific_date_input,
